@@ -8,6 +8,7 @@
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnPaste": true,
     "editor.inlayHints.enabled": "on",
+    "explorer.compactFolders": false,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.fixAll": [
         "source.unusedImports",
