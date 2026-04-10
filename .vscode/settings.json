@@ -1,0 +1,22 @@
+{
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.ruff": "always",
+        "source.organizeImports.ruff": "always",
+        "source.sort.json": "always"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnPaste": true,
+    "editor.inlayHints.enabled": "on",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.fixAll": [
+        "source.unusedImports",
+        "source.addTypeAnnotation",
+        "source.convertImportFormat",
+        "source.convertImportStar"
+    ],
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "ty.completions.autoImport": true,
+    "ty.inlayHints.callArgumentNames": true,
+    "ty.inlayHints.variableTypes": true
+}
