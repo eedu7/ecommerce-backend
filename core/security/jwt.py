@@ -205,3 +205,7 @@ class JWTService:
                 message="Token validation encountered an unexpected error",
                 details={"reason": str(exc)},
             ) from exc
+
+
+def get_jwt_service() -> JWTService:
+    return JWTService()

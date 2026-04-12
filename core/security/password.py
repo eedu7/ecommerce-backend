@@ -25,3 +25,7 @@ class PasswordService:
             return False
         except (VerificationError, InvalidHashError) as exc:
             raise ValueError(f"Invalid password hash format: {str(exc)}")
+
+
+def get_password_service() -> PasswordService:
+    return PasswordService()

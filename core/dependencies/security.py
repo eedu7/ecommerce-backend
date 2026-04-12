@@ -2,15 +2,12 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from core.security import JWTService, PasswordService
-
-
-def get_jwt_service() -> JWTService:
-    return JWTService()
-
-
-def get_password_service() -> PasswordService:
-    return PasswordService()
+from core.security import (
+    JWTService,
+    PasswordService,
+    get_jwt_service,
+    get_password_service,
+)
 
 
 JWTServiceDep = Annotated[JWTService, Depends(get_jwt_service)]
