@@ -1,7 +1,7 @@
-from .base import DBase
+from .base import DBBase
 from .session import get_async_session
 
 __all__ = [
-    "DBase",
+    "DBBase",
     "get_async_session",
 ]
