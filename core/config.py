@@ -1,5 +1,6 @@
 from enum import StrEnum
 
+from pydantic import PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -23,6 +24,18 @@ class Config(BaseSettings):
     DB_POOL_RECYCLE: int = 3600
     DB_POOL_PRE_PING: bool = True
     DB_MAX_OVERFLOW: int = 10
+
+    @computed_field
+    @property
+    def DATABASE_URL(self) -> PostgresDsn:
+        return PostgresDsn.build(
+            scheme="postgresql+asyncpg",
+            username=self.POSTGRES_USER,
+            password=self.POSTGRES_PASSWORD,
+            host=self.POSTGRES_HOST,
+            port=self.POSTGRES_PORT,
+            path=self.POSTGRES_DB,
+        )
 
     model_config = SettingsConfigDict(
         env_file=".env",
