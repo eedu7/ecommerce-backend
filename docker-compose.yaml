@@ -1,0 +1,22 @@
+services:
+  database:
+    image: postgres:18.3-alpine3.23
+    env_file: .env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    env_file: .env
+    ports:
+      - "${PGADMIN_PORT}:80"
+    depends_on:
+      - database
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  database-data:
+  pgadmin-data:

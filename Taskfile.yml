@@ -26,7 +26,28 @@ tasks:
       - uv run ruff format .
 
   # Migrate
-  migrate:
+  db:migrate:
     desc: Run database migrations
     cmds:
       - uv run alembic upgrade head
+
+  db:downgrade:
+    desc: Downgrade the database to the previous version
+    cmds:
+      - uv run alembic downgrade -1
+
+  # Docker
+  docker:up:
+    desc: Start the Docker containers
+    cmds:
+      - docker-compose up -d
+  
+  docker:down:
+    desc: Stop the Docker containers
+    cmds:
+      - docker-compose down -v
+    
+  docker:stop:
+    desc: Stop the Docker containers without removing volumes
+    cmds:
+      - docker-compose stop
