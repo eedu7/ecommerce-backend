@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+vars:
+  GREETING: Hello, world!
+
+tasks:
+  # Development
+  dev:
+    desc: Start the development server
+    cmds:
+      - uv run fastapi dev main.py
+
+  # Production
+  run:
+    desc: Start the production server
+    cmds:
+      - uv run fastapi run main.py
+
+  # Format
+  format:
+    desc: Format the code using Black
+    cmds:
+      - uv run ruff check --fix .
+      - uv run ruff format .
+
+  # Migrate
+  migrate:
+    desc: Run database migrations
+    cmds:
+      - uv run alembic upgrade head
