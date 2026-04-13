@@ -62,7 +62,7 @@ class AuthLogin(BaseModel):
     def validate_username_or_email(cls, v: str) -> str:
         v = v.strip()
         try:
-            EmailStr(v)
+            EmailStr(v)  # type: ignore
             return v
         except Exception:
             pass
