@@ -36,6 +36,10 @@ async def logout(
     return await controller.logout(data=data, response=response, request=request)
 
 
-@router.get("/me", response_model=UserOut, dependencies=[Depends(auth_required)])
+@router.get(
+    "/me",
+    response_model=UserOut,
+    dependencies=[Depends(auth_required)],
+)
 async def get_me(current_user: CurrentUserDep) -> DBUser:
     return current_user

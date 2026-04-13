@@ -39,6 +39,7 @@ class AuthController(BaseController[DBUser]):
                 "email": data.email,
                 "username": data.username,
                 "password": hashed_password,
+                "role": data.role,
             }
         )
 
