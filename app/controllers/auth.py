@@ -1,13 +1,20 @@
-from fastapi import Response
+from fastapi import Request, Response
+from fastapi.responses import JSONResponse
 
 from app.models import DBUser
 from app.repositories import UserRepository
-from app.schemas.requests.auth import AuthIn, AuthLogin
+from app.schemas.requests.auth import AuthIn, AuthLogin, AuthLogout
 from app.schemas.responses.auth import AuthOut
 from app.schemas.responses.user import UserOut
+from core.config import config
 from core.controller import BaseController
-from core.exceptions import DuplicateValueException, UnauthorizedException
+from core.exceptions import (
+    BadRequestException,
+    DuplicateValueException,
+    UnauthorizedException,
+)
 from core.security import JWTService, PasswordService
+from core.utils.cookies import delete_auth_cookies, set_auth_cookies
 
 
 class AuthController(BaseController[DBUser]):
@@ -42,12 +49,14 @@ class AuthController(BaseController[DBUser]):
             extra_claims={"user": {"username": user.username, "email": user.email}},
         )
 
+        set_auth_cookies(token, response)
+
         return AuthOut(
             token=token,
             user=UserOut.model_validate(user),
         )
 
-    async def login(self, data: AuthLogin) -> AuthOut:
+    async def login(self, data: AuthLogin, response: Response) -> AuthOut:
 
         user = await self.repository.get_by_username_or_email(data.username_or_email)
 
@@ -70,4 +79,23 @@ class AuthController(BaseController[DBUser]):
             extra_claims={"user": {"username": user.username, "email": user.email}},
         )
 
+        set_auth_cookies(token, response)
+
         return AuthOut(token=token, user=UserOut.model_validate(user))
+
+    async def logout(
+        self, data: AuthLogout, request: Request, response: Response
+    ) -> JSONResponse:
+        access_token = data.access_token
+        refresh_token = data.refresh_token
+        if not access_token:
+            access_token = request.cookies.get(config.COOKIE_ACCESS_TOKEN_KEY)
+        if not refresh_token:
+            refresh_token = request.cookies.get(config.COOKIE_REFRESH_TOKEN_KEY)
+
+        if not access_token or not refresh_token:
+            raise BadRequestException("No credentials provided")
+
+        delete_auth_cookies(response)
+
+        return JSONResponse(content={"message": "Logged out successfully"})
