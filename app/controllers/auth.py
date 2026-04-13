@@ -1,3 +1,5 @@
+from fastapi import Response
+
 from app.models import DBUser
 from app.repositories import UserRepository
 from app.schemas.requests.auth import AuthIn, AuthLogin
@@ -17,7 +19,7 @@ class AuthController(BaseController[DBUser]):
         self.jwt: JWTService = jwt
         self.password: PasswordService = password
 
-    async def register(self, data: AuthIn) -> AuthOut:
+    async def register(self, data: AuthIn, response: Response) -> AuthOut:
         if await self.repository.get_by_email(data.email):
             raise DuplicateValueException()
         if await self.repository.get_by_username(data.username):
