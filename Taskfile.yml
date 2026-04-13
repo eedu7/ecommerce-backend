@@ -26,6 +26,13 @@ tasks:
       - uv run ruff format .
 
   # Migrate
+  db:migrations:
+    desc: Generate a new database migration
+    vars:
+      MESSAGE: '{{.MESSAGE | default "New migration" }}' 
+    cmds:
+      - uv run alembic revision --autogenerate -m "{{.MESSAGE}}"
+
   db:migrate:
     desc: Run database migrations
     cmds:
