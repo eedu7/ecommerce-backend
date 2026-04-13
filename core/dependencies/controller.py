@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from app.controllers import AuthController, UserController
+from app.controllers import AuthController, CategoryController, UserController
 from core.factory.controller import ControllerFactory
 
 UserControllerDep = Annotated[
@@ -11,4 +11,8 @@ UserControllerDep = Annotated[
 
 AuthControllerDep = Annotated[
     AuthController, Depends(ControllerFactory.get_auth_controller)
+]
+
+CategoryControllerDep = Annotated[
+    CategoryController, Depends(ControllerFactory.get_category_controller)
 ]
