@@ -28,10 +28,8 @@ tasks:
   # Migrate
   db:migrations:
     desc: Generate a new database migration
-    vars:
-      MESSAGE: '{{.MESSAGE | default "New migration" }}' 
     cmds:
-      - uv run alembic revision --autogenerate -m "{{.MESSAGE}}"
+      - uv run alembic revision --autogenerate -m "{{.CLI_ARGS}}"
 
   db:migrate:
     desc: Run database migrations
