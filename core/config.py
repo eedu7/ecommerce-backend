@@ -62,6 +62,20 @@ class Config(BaseSettings):
         description="Clock-skew tolerance applied when validating 'exp' and 'nbf'. Keep at 0 in production; raise only for cross-service clock drift",
     )
 
+    # Redis
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
+    REDIS_PASSWORD: str = ""
+    REDIS_MAX_CONNECTIONS: int = 50
+    REDIS_SOCKET_TIMEOUT: int = 5
+    REDIS_SOCKET_CONNECT_TIMEOUT: int = 5
+    REDIS_DECODE_RESPONSES: bool = True
+    REDIS_HEALTH_CHECK_INTERVAL: int = 30
+
+    # Redis Key Prefixes
+    REDIS_TOKEN_REVOKE_PREFIX: str = "TOKEN_REVOKED"
+
     # Cookie
     COOKIE_SECURE: bool = Field(
         False, description="Set to False only in development (allows HTTP)"
