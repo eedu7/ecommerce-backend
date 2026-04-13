@@ -24,8 +24,10 @@ class BaseRepository(Generic[T]):
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def add(self, db_obj: T) -> None:
+    async def create(self, db_in: Dict[str, Any]) -> T:
+        db_obj = self.model(**db_in)
         self.session.add(db_obj)
+        return db_obj
 
     async def delete(self, db_obj: T) -> None:
         await self.session.delete(db_obj)
