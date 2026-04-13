@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
-from .auth_router import router as auth_router
-from .mfa_router import router as mfa_router
-from .oauth_router import router as oauth_router
-from .password_router import router as password_router
+from .auth import router as auth_router
+from .mfa import router as mfa_router
+from .oauth import router as oauth_router
+from .password import router as password_router
 
 router = APIRouter()
 
