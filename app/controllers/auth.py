@@ -1,5 +1,6 @@
 from app.models import DBUser
 from app.repositories import UserRepository
+from app.schemas.requests.auth import AuthIn
 from core.controller import BaseController
 from core.security import JWTService, PasswordService
 
@@ -12,3 +13,9 @@ class AuthController(BaseController[DBUser]):
         self.repository = repository
         self.jwt = jwt
         self.password = password
+
+    async def register(
+        self,
+        data: AuthIn,
+    ):
+        pass
