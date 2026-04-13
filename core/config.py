@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Literal
+from typing import List, Literal
 
 from pydantic import Field, PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -94,6 +94,12 @@ class Config(BaseSettings):
         "REFRESH_TOKEN",
         description="Refresh token key",
     )
+
+    # CORS
+    CORS_ALLOW_ORIGINS: List[str] = ["http://localhost:3000"]
+    CORS_ALLOW_CREDENTIALS: bool = True
+    CORS_ALLOW_METHODS: List[str] = ["*"]
+    CORS_ALLOW_HEADERS: List[str] = ["*"]
 
     @computed_field
     @property
