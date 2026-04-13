@@ -42,4 +42,4 @@ async def auth_required(
     request.state.user = current_user
 
 
-Authentication_Required = Annotated[TokenPayload, Depends(auth_required)]
+AuthenticationRequiredDep = Annotated[TokenPayload, Depends(auth_required)]
