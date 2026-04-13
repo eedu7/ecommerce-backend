@@ -101,6 +101,9 @@ class Config(BaseSettings):
     CORS_ALLOW_METHODS: List[str] = ["*"]
     CORS_ALLOW_HEADERS: List[str] = ["*"]
 
+    # Resend
+    RESEND_API_KEY: str = "re_..."
+
     @computed_field
     @property
     def DATABASE_URL(self) -> PostgresDsn:
