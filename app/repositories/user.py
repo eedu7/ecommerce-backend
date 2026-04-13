@@ -1,3 +1,4 @@
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import DBUser
@@ -13,3 +14,10 @@ class UserRepository(BaseRepository[DBUser]):
 
     async def get_by_username(self, username: str) -> DBUser | None:
         return await self.get_one_by_filters({"username": username})
+
+    async def get_by_username_or_email(self, value: str) -> DBUser | None:
+        stmt = select(DBUser).where(
+            or_(DBUser.username == value, DBUser.email == value)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().first()
