@@ -103,7 +103,7 @@ class Config(BaseSettings):
 
     # Resend
     RESEND_API_KEY: str = "re_..."
-    RESEND_FROM_EMAIL: str = "noreplay@yourdomain.com"
+    RESEND_FROM_EMAIL: str = "onboarding@resend.dev"
     FRONTEND_URL: str = "http://localhost:8000"
 
     @computed_field

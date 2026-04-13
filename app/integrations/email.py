@@ -4,6 +4,8 @@ from resend import Emails
 from core.config import config
 from core.utils.current_timestamp import current_timestamp
 
+resend.api_key = config.RESEND_API_KEY
+
 
 class EmailService:
     """Service for sending emails via Resend"""
@@ -149,7 +151,9 @@ class EmailService:
         return resend.Emails.send(params)
 
     @staticmethod
-    def send_logout_notification(to_email: str, user_name: str) -> resend.Emails.SendResponse:
+    def send_logout_notification(
+        to_email: str, user_name: str
+    ) -> resend.Emails.SendResponse:
         """Notify user of logout"""
         params: resend.Emails.SendParams = {
             "from": config.RESEND_FROM_EMAIL,
@@ -165,6 +169,43 @@ class EmailService:
                     </p>
                     <p style="color: #DC2626; font-size: 14px;">
                         If you didn't perform this action, please contact support.
+                    </p>
+                </div>
+            """,
+        }
+
+        return resend.Emails.send(params)
+
+    @staticmethod
+    def send_welcome_email(to_email: str, user_name: str) -> resend.Emails.SendResponse:
+        """Send welcome email after successful registration"""
+
+        params: resend.Emails.SendParams = {
+            "from": config.RESEND_FROM_EMAIL,
+            "to": [to_email],
+            "subject": "Welcome",
+            "html": f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2>Welcome aboard, {user_name}! 🎉</h2>
+                    
+                    <p>We're excited to have you.</p>
+                    
+                    <p>You can now explore all features and start using your account.</p>
+
+                    <div style="margin: 30px 0;">
+                        <a href="{config.FRONTEND_URL}" 
+                        style="background-color: #10B981; color: white; padding: 12px 24px; 
+                                text-decoration: none; border-radius: 6px; display: inline-block;">
+                            Go to Dashboard
+                        </a>
+                    </div>
+
+                    <p style="color: #6B7280; font-size: 14px;">
+                        If you have any questions, feel free to reach out to our support team.
+                    </p>
+
+                    <p style="color: #6B7280; font-size: 12px;">
+                        Joined at: {current_timestamp()} UTC
                     </p>
                 </div>
             """,
