@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import Field, PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -59,6 +60,25 @@ class Config(BaseSettings):
         0,
         ge=0,
         description="Clock-skew tolerance applied when validating 'exp' and 'nbf'. Keep at 0 in production; raise only for cross-service clock drift",
+    )
+
+    # Cookie
+    COOKIE_SECURE: bool = Field(
+        False, description="Set to False only in development (allows HTTP)"
+    )
+    COOKIE_SAMESITE: Literal["lax", "strict", "none"] = Field(
+        "lax", description="SameSite poicy"
+    )
+    COOKIE_DOMAIN: str | None = Field(
+        None, description="Cookie domain. None = current domain only"
+    )
+    COOKIE_ACCESS_TOKEN_KEY: str = Field(
+        "ACCESS_TOKEN",
+        description="Access token key",
+    )
+    COOKIE_REFRESH_TOKEN_KEY: str = Field(
+        "REFRESH_TOKEN",
+        description="Refresh token key",
     )
 
     @computed_field
