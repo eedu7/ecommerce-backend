@@ -16,6 +16,7 @@ from jwt import (
 
 from app.schemas.extras.token import Token, TokenPayload, TokenType
 from core.config import config
+from core.dependencies.stores import RevokeTokenStoreDep
 from core.exceptions import InternalServerException
 from core.exceptions.jwt import (
     InvalidTokenException,
@@ -23,6 +24,7 @@ from core.exceptions.jwt import (
     MissingTokenException,
     TokenExpiredException,
 )
+from core.stores import RevokeTokenStore
 
 
 def _build_payload(raw: Dict[str, Any]) -> TokenPayload:
@@ -51,9 +53,8 @@ def _build_payload(raw: Dict[str, Any]) -> TokenPayload:
 
 
 class JWTService:
-    def __init__(
-        self,
-    ) -> None:
+    def __init__(self, store: RevokeTokenStore) -> None:
+        self.store = store
         self.jwt_access_token_expire_minute: int = (
             config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES
         )
@@ -121,6 +122,36 @@ class JWTService:
         return self.build_token_pair(
             subject=payload.sub, extra_claims={**payload.extra, **(extra_claims or {})}
         )
+
+    async def revoke_tokens(
+        self, access_token: str | None = None, refresh_token: str | None = None
+    ) -> None:
+        if access_token:
+            access_payload = self.decode_expired_token(access_token)
+            await self._revoke_token(
+                access_payload.jti, self.jwt_access_token_expire_minute * 60
+            )
+
+        if refresh_token:
+            refresh_payload = self.decode_expired_token(refresh_token)
+            await self._revoke_token(
+                refresh_payload.jti, self.jwt_refresh_token_expire_days * 24 * 60 * 60
+            )
+
+    async def _revoke_token(self, jti: str, ttl: int | None = None) -> None:
+        if ttl is None:
+            ttl = self.jwt_access_token_expire_minute * 60
+        await self.store.revoke(jti, ttl=ttl)
+
+    async def revoke_token_by_raw(self, token: str) -> None:
+        payload = self.decode_token(token, verify_exp=False)
+        await self._revoke_token(payload.jti)
+
+    async def is_token_revoked(self, jti: str) -> bool:
+        return await self.store.is_revoked(jti)
+
+    def decode_expired_token(self, token: str) -> TokenPayload:
+        return self.decode_token(token, verify_exp=False)
 
     def _build_token(
         self,
@@ -207,5 +238,5 @@ class JWTService:
             ) from exc
 
 
-def get_jwt_service() -> JWTService:
-    return JWTService()
+def get_jwt_service(store: RevokeTokenStoreDep) -> JWTService:
+    return JWTService(store)

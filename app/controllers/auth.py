@@ -96,6 +96,7 @@ class AuthController(BaseController[DBUser]):
         if not access_token or not refresh_token:
             raise BadRequestException("No credentials provided")
 
+        await self.jwt.revoke_tokens(access_token, refresh_token)
         delete_auth_cookies(response)
 
         return JSONResponse(content={"message": "Logged out successfully"})
