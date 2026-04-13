@@ -1,7 +1,7 @@
 from enum import StrEnum
 
+from sqlalchemy import Boolean, String
 from sqlalchemy import Enum as PG_Enum
-from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.database import DBBase
@@ -25,6 +25,11 @@ class DBUser(DBBase, PrimaryKeyMixin, TimestampMixin):
     password: Mapped[str] = mapped_column(String(256), nullable=True)
     role: Mapped[DBUserRole] = mapped_column(
         PG_Enum(DBUserRole), nullable=False, default=DBUserRole.CUSTOMER
+    )
+    email_verified: Mapped[bool] = mapped_column(Boolean, server_default="false")
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        server_default="true",
     )
 
     def __repr__(self):
