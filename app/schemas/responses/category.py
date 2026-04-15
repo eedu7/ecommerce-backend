@@ -1,0 +1,11 @@
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict
+
+
+class CategoryOut(BaseModel):
+    uid: UUID
+    name: str
+    category_uid: UUID | None = None
+
+    model_config = ConfigDict(from_attributes=True)
