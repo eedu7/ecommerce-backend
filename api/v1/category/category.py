@@ -21,7 +21,7 @@ async def get_by_uid(uid: UUID):
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=CategoryOut)
 async def create(data: CategoryIn, controller: CategoryControllerDep):
-    pass
+    return await controller.create(data)
 
 
 @router.put("/{uid}")

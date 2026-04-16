@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, status
 
 from app.schemas.requests.sub_category import SubCategoryIn
-from app.schemas.responses.category import CategoryOut
+from app.schemas.responses.sub_category import SubCategoryOut
 from core.dependencies.controller import SubCategoryControllerDep
 
 router = APIRouter()
@@ -19,9 +19,10 @@ async def get_by_uid(uid: UUID):
     pass
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=CategoryOut)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=SubCategoryOut)
 async def create(data: SubCategoryIn, controller: SubCategoryControllerDep):
-    pass
+
+    return await controller.create(data)
 
 
 @router.put("/{uid}")

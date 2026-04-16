@@ -5,4 +5,4 @@ from pydantic import BaseModel
 
 class SubCategoryIn(BaseModel):
     name: str
-    parent_uid: UUID
+    category_uid: UUID
