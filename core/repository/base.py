@@ -29,6 +29,15 @@ class BaseRepository(Generic[T]):
         self.session.add(db_obj)
         return db_obj
 
+    async def update(self, db_obj: T, obj_in: Dict[str, Any]) -> T:
+        for field, value in obj_in.items():
+            if not hasattr(db_obj, field):
+                raise AttributeError(
+                    f"Model {self.model.__name__} has no attribute `{field}`"
+                )
+            setattr(db_obj, field, value)
+        return db_obj
+
     async def delete(self, db_obj: T) -> None:
         await self.session.delete(db_obj)
 
