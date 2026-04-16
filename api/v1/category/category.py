@@ -15,9 +15,9 @@ async def get_all(controller: CategoryControllerDep):
     pass
 
 
-@router.get("/{uid}")
-async def get_by_uid(uid: UUID):
-    pass
+@router.get("/{uid}", response_model=CategoryOut)
+async def get_by_uid(uid: UUID, controller: CategoryControllerDep):
+    return await controller.get_by_uid(uid)
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=CategoryOut)
