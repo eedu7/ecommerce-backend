@@ -1,3 +1,4 @@
+from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, status
@@ -10,9 +11,13 @@ from core.dependencies.controller import SubCategoryControllerDep
 router = APIRouter()
 
 
-@router.get("/")
-async def get():
-    pass
+@router.get("/", response_model=List[SubCategoryOut])
+async def get_all(
+    controller: SubCategoryControllerDep,
+    offset: int = 0,
+    limit: int = 20,
+):
+    return await controller.get_all(offset=offset, limit=limit)
 
 
 @router.get("/{uid}", response_model=SubCategoryOut)

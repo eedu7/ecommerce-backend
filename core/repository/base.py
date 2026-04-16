@@ -17,6 +17,11 @@ class BaseRepository(Generic[T]):
     async def get_by_uid(self, uid: UUID) -> T | None:
         return await self.session.get(self.model, uid)
 
+    async def get_all(self, offset: int = 0, limit: int = 20) -> Sequence[T]:
+        stmt = select(self.model).offset(offset).limit(limit)
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
+
     async def get_one_by_filters(self, filters: Dict[str, Any]) -> T | None:
         stmt = select(self.model)
         stmt = self._apply_filters(stmt, filters)
