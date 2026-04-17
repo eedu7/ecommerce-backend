@@ -1,3 +1,4 @@
+from typing import Sequence
 from uuid import UUID
 
 from sqlalchemy import select
@@ -12,13 +13,21 @@ class ProductRepository(BaseRepository[DBProduct]):
     def __init__(self, session: AsyncSession):
         super().__init__(DBProduct, session)
 
+    async def get_all(self, offset: int = 0, limit: int = 0) -> Sequence[DBProduct]:
+        stmt = (
+            select(DBProduct)
+            .offset(offset)
+            .limit(limit)
+            .options(selectinload(DBProduct.category))
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
+
     async def get_by_uid(self, uid: UUID) -> DBProduct | None:
         stmt = (
             select(DBProduct)
             .where(DBProduct.uid == uid)
-            .options(
-                selectinload(DBProduct.category), selectinload(DBProduct.sub_category)
-            )
+            .options(selectinload(DBProduct.category))
         )
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()

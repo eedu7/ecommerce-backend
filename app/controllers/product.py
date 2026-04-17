@@ -1,3 +1,4 @@
+from typing import Sequence
 from uuid import UUID
 
 from fastapi.responses import JSONResponse
@@ -14,12 +15,15 @@ class ProductController(BaseController[DBProduct]):
         super().__init__(DBProduct, repository)
         self.repository: ProductRepository = repository
 
+    async def get_all(self, offset: int = 0, limit: int = 20) -> Sequence[DBProduct]:
+        return await self.repository.get_all(offset=offset, limit=limit)
+
     async def create(self, data: ProductIn) -> DBProduct:
         product = await self.repository.create(
             {**data.model_dump(exclude_none=True), "slug": slugify(data.name)}
         )
         await self.commit()
-        return product
+        return await self.get_by_uid(product.uid)
 
     async def update(self, uid: UUID, data: ProductUpdateIn) -> DBProduct:
         product = await self.get_by_uid(uid)
