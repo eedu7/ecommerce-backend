@@ -5,7 +5,7 @@ from slugify import slugify
 
 from app.models import DBProduct
 from app.repositories import ProductRepository
-from app.schemas.requests.product import ProductIn
+from app.schemas.requests.product import ProductIn, ProductUpdateIn
 from core.controller import BaseController
 
 
@@ -20,6 +20,15 @@ class ProductController(BaseController[DBProduct]):
         )
         await self.commit()
         return product
+
+    async def update(self, uid: UUID, data: ProductUpdateIn) -> DBProduct:
+        product = await self.get_by_uid(uid)
+
+        updated = await self.repository.update(
+            product, data.model_dump(exclude_none=True)
+        )
+        await self.commit()
+        return updated
 
     async def delete(self, uid: UUID) -> JSONResponse:
         product = await self.get_by_uid(uid)
