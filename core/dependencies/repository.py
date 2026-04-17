@@ -2,7 +2,12 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from app.repositories import CategoryRepository, SubCategoryRepository, UserRepository
+from app.repositories import (
+    CategoryRepository,
+    ProductRepository,
+    SubCategoryRepository,
+    UserRepository,
+)
 from core.factory.repository import RepositoryFactory
 
 UserRepositoryDep = Annotated[
@@ -13,4 +18,7 @@ CategoryRepositoryDep = Annotated[
 ]
 SubCategoryRepositoryDep = Annotated[
     SubCategoryRepository, Depends(RepositoryFactory.get_sub_category_repository)
+]
+ProudctRepositoryDep = Annotated[
+    ProductRepository, Depends(RepositoryFactory.get_product_repository)
 ]
