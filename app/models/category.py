@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -9,6 +9,7 @@ from core.database import DBBase
 from core.database.mixin import PrimaryKeyMixin, TimestampMixin
 
 if TYPE_CHECKING:
+    from .product import DBProduct
     from .sub_category import DBSubCategory  # Avoid circular import for type checking
 
 
@@ -21,6 +22,9 @@ class DBCategory(DBBase, PrimaryKeyMixin, TimestampMixin):
     # Relationship to sub-categories
     sub_categories: Mapped[list["DBSubCategory"]] = relationship(
         "DBSubCategory", back_populates="category", cascade="all, delete-orphan"
+    )
+    products: Mapped[List["DBProduct"]] = relationship(
+        "DBProduct", back_populates="category", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:

@@ -1,10 +1,18 @@
-from decimal import Decimal
+from __future__ import annotations
 
-from sqlalchemy import Boolean, Integer, Numeric, String
-from sqlalchemy.orm import Mapped, mapped_column
+from decimal import Decimal
+from typing import TYPE_CHECKING
+from uuid import UUID
+
+from sqlalchemy import Boolean, ForeignKey, Integer, Numeric, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models import DBBase
 from core.database.mixin import PrimaryKeyMixin, TimestampMixin
+
+if TYPE_CHECKING:
+    from .category import DBCategory
+    from .sub_category import DBSubCategory
 
 
 class DBProduct(DBBase, PrimaryKeyMixin, TimestampMixin):
@@ -18,8 +26,29 @@ class DBProduct(DBBase, PrimaryKeyMixin, TimestampMixin):
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     stock_quantity: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     is_active: Mapped[bool] = mapped_column(
-        Boolean, server_default="true", nullable=False
+        Boolean, server_default="false", nullable=False
     )
     is_featured: Mapped[bool] = mapped_column(
         Boolean, server_default="false", nullable=False
     )
+
+    # Foreign Key
+    category_uid: Mapped[UUID] = mapped_column(
+        ForeignKey("categories.uid", ondelete="CASCADE"), nullable=False
+    )
+    sub_category_uid: Mapped[UUID] = mapped_column(
+        ForeignKey("sub_categories.uid", ondelete="CASCADE"), nullable=False
+    )
+
+    # Relationships
+    category: Mapped["DBCategory"] = relationship(
+        "DBCategory", back_populates="products"
+    )
+    sub_category: Mapped["DBSubCategory"] = relationship(
+        "DBSubCategory", back_populates="products"
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<Product(uid='{self.uid!r}', name='{self.name!r}', slug='{self.slug!r}')>"
+        )
