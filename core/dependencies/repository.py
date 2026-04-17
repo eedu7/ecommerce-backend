@@ -13,12 +13,15 @@ from core.factory.repository import RepositoryFactory
 UserRepositoryDep = Annotated[
     UserRepository, Depends(RepositoryFactory.get_user_repository)
 ]
+
 CategoryRepositoryDep = Annotated[
     CategoryRepository, Depends(RepositoryFactory.get_category_repository)
 ]
+
 SubCategoryRepositoryDep = Annotated[
     SubCategoryRepository, Depends(RepositoryFactory.get_sub_category_repository)
 ]
-ProudctRepositoryDep = Annotated[
+
+ProductRepositoryDep = Annotated[
     ProductRepository, Depends(RepositoryFactory.get_product_repository)
 ]
