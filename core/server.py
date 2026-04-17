@@ -16,7 +16,7 @@ def make_middleware(app: FastAPI) -> None:
 
 
 def init_routers(app_: FastAPI) -> None:
-    app_.include_router(router)
+    app_.include_router(router, prefix="/api")
 
 
 def run_server() -> FastAPI:
