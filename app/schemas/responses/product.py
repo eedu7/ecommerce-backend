@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
 from app.schemas.responses.category import CategoryOut
-from app.schemas.responses.sub_category import SubCategoryOut
 
 
 class ProductOut(BaseModel):
@@ -13,4 +12,3 @@ class ProductOut(BaseModel):
     is_active: bool
     is_featured: bool
     category: CategoryOut
-    sub_category: SubCategoryOut

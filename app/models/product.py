@@ -11,8 +11,7 @@ from app.models import DBBase
 from core.database.mixin import PrimaryKeyMixin, TimestampMixin
 
 if TYPE_CHECKING:
-    from .category import DBCategory
-    from .sub_category import DBSubCategory
+    from .category import DBCategory  # Avoid circular import for type checking
 
 
 class DBProduct(DBBase, PrimaryKeyMixin, TimestampMixin):
@@ -36,16 +35,10 @@ class DBProduct(DBBase, PrimaryKeyMixin, TimestampMixin):
     category_uid: Mapped[UUID] = mapped_column(
         ForeignKey("categories.uid", ondelete="CASCADE"), nullable=False
     )
-    sub_category_uid: Mapped[UUID] = mapped_column(
-        ForeignKey("sub_categories.uid", ondelete="CASCADE"), nullable=False
-    )
 
     # Relationships
     category: Mapped["DBCategory"] = relationship(
         "DBCategory", back_populates="products"
-    )
-    sub_category: Mapped["DBSubCategory"] = relationship(
-        "DBSubCategory", back_populates="products"
     )
 
     def __repr__(self) -> str:

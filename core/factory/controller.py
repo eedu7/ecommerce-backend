@@ -2,13 +2,11 @@ from app.controllers import (
     AuthController,
     CategoryController,
     ProductController,
-    SubCategoryController,
     UserController,
 )
 from core.dependencies.repository import (
     CategoryRepositoryDep,
     ProductRepositoryDep,
-    SubCategoryRepositoryDep,
     UserRepositoryDep,
 )
 from core.dependencies.security import JWTServiceDep, PasswordServiceDep
@@ -30,12 +28,6 @@ class ControllerFactory:
         repository: CategoryRepositoryDep,
     ) -> CategoryController:
         return CategoryController(repository)
-
-    @staticmethod
-    def get_sub_category_controller(
-        repository: SubCategoryRepositoryDep,
-    ) -> SubCategoryController:
-        return SubCategoryController(repository)
 
     @staticmethod
     def get_product_controller(repository: ProductRepositoryDep) -> ProductController:

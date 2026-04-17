@@ -6,7 +6,6 @@ from app.controllers import (
     AuthController,
     CategoryController,
     ProductController,
-    SubCategoryController,
     UserController,
 )
 from core.factory.controller import ControllerFactory
@@ -21,10 +20,6 @@ AuthControllerDep = Annotated[
 
 CategoryControllerDep = Annotated[
     CategoryController, Depends(ControllerFactory.get_category_controller)
-]
-
-SubCategoryControllerDep = Annotated[
-    SubCategoryController, Depends(ControllerFactory.get_sub_category_controller)
 ]
 
 ProductControllerDep = Annotated[

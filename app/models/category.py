@@ -9,8 +9,7 @@ from core.database import DBBase
 from core.database.mixin import PrimaryKeyMixin, TimestampMixin
 
 if TYPE_CHECKING:
-    from .product import DBProduct
-    from .sub_category import DBSubCategory  # Avoid circular import for type checking
+    from .product import DBProduct  # Avoid circular import for type checking
 
 
 class DBCategory(DBBase, PrimaryKeyMixin, TimestampMixin):
@@ -20,9 +19,6 @@ class DBCategory(DBBase, PrimaryKeyMixin, TimestampMixin):
     slug: Mapped[str] = mapped_column(String(84), nullable=False, unique=True)
 
     # Relationship to sub-categories
-    sub_categories: Mapped[list["DBSubCategory"]] = relationship(
-        "DBSubCategory", back_populates="category", cascade="all, delete-orphan"
-    )
     products: Mapped[List["DBProduct"]] = relationship(
         "DBProduct", back_populates="category", cascade="all, delete-orphan"
     )
