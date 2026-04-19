@@ -3,6 +3,8 @@ from typing import Annotated
 from fastapi import Depends
 
 from app.repositories import (
+    CartItemRepository,
+    CartRepository,
     CategoryRepository,
     ProductRepository,
     UserRepository,
@@ -19,4 +21,12 @@ CategoryRepositoryDep = Annotated[
 
 ProductRepositoryDep = Annotated[
     ProductRepository, Depends(RepositoryFactory.get_product_repository)
+]
+
+CartRepositoryDep = Annotated[
+    CartRepository, Depends(RepositoryFactory.get_cart_repository)
+]
+
+CartItemRepositoryDep = Annotated[
+    CartItemRepository, Depends(RepositoryFactory.get_cart_item_repository)
 ]
