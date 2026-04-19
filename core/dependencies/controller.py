@@ -4,6 +4,8 @@ from fastapi import Depends
 
 from app.controllers import (
     AuthController,
+    CartController,
+    CartItemController,
     CategoryController,
     ProductController,
     UserController,
@@ -24,4 +26,12 @@ CategoryControllerDep = Annotated[
 
 ProductControllerDep = Annotated[
     ProductController, Depends(ControllerFactory.get_product_controller)
+]
+
+CartControllerDep = Annotated[
+    CartController, Depends(ControllerFactory.get_cart_controller)
+]
+
+CartItemControllerDep = Annotated[
+    CartItemController, Depends(ControllerFactory.get_cart_item_controller)
 ]

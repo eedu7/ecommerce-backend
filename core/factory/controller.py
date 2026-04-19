@@ -1,10 +1,14 @@
 from app.controllers import (
     AuthController,
+    CartController,
+    CartItemController,
     CategoryController,
     ProductController,
     UserController,
 )
 from core.dependencies.repository import (
+    CartItemRepositoryDep,
+    CartRepositoryDep,
     CategoryRepositoryDep,
     ProductRepositoryDep,
     UserRepositoryDep,
@@ -32,3 +36,13 @@ class ControllerFactory:
     @staticmethod
     def get_product_controller(repository: ProductRepositoryDep) -> ProductController:
         return ProductController(repository)
+
+    @staticmethod
+    def get_cart_controller(repository: CartRepositoryDep) -> CartController:
+        return CartController(repository)
+
+    @staticmethod
+    def get_cart_item_controller(
+        repository: CartItemRepositoryDep,
+    ) -> CartItemController:
+        return CartItemController(repository)

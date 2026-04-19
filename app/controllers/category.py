@@ -12,10 +12,10 @@ from core.controller import BaseController
 class CategoryController(BaseController[DBCategory]):
     def __init__(
         self,
-        category_repository: CategoryRepository,
+        repository: CategoryRepository,
     ) -> None:
-        super().__init__(DBCategory, category_repository)
-        self.repository: CategoryRepository = category_repository
+        super().__init__(DBCategory, repository)
+        self.repository: CategoryRepository = repository
 
     async def create(self, data: CategoryIn) -> DBCategory:
         db_obj = await self.repository.create(
