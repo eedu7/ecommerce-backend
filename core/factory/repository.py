@@ -2,6 +2,8 @@ from app.repositories import (
     CartItemRepository,
     CartRepository,
     CategoryRepository,
+    OrderItemRepository,
+    OrderRepository,
     ProductRepository,
     UserRepository,
 )
@@ -28,3 +30,11 @@ class RepositoryFactory:
     @staticmethod
     def get_cart_item_repository(session: AsyncSessionDep) -> CartItemRepository:
         return CartItemRepository(session)
+
+    @staticmethod
+    def get_order_repository(session: AsyncSessionDep) -> OrderRepository:
+        return OrderRepository(session)
+
+    @staticmethod
+    def get_order_item_repository(session: AsyncSessionDep) -> OrderItemRepository:
+        return OrderItemRepository(session)

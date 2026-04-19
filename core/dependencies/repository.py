@@ -6,6 +6,8 @@ from app.repositories import (
     CartItemRepository,
     CartRepository,
     CategoryRepository,
+    OrderItemRepository,
+    OrderRepository,
     ProductRepository,
     UserRepository,
 )
@@ -29,4 +31,12 @@ CartRepositoryDep = Annotated[
 
 CartItemRepositoryDep = Annotated[
     CartItemRepository, Depends(RepositoryFactory.get_cart_item_repository)
+]
+
+OrderRepositoryDep = Annotated[
+    OrderRepository, Depends(RepositoryFactory.get_order_repository)
+]
+
+OrderItemRepositoryDep = Annotated[
+    OrderItemRepository, Depends(RepositoryFactory.get_order_item_repository)
 ]
