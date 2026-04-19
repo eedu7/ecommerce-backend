@@ -7,6 +7,8 @@ from app.controllers import (
     CartController,
     CartItemController,
     CategoryController,
+    OrderController,
+    OrderItemController,
     ProductController,
     UserController,
 )
@@ -34,4 +36,12 @@ CartControllerDep = Annotated[
 
 CartItemControllerDep = Annotated[
     CartItemController, Depends(ControllerFactory.get_cart_item_controller)
+]
+
+OrderControllerDep = Annotated[
+    OrderController, Depends(ControllerFactory.get_order_controller)
+]
+
+OrderItemControllerDep = Annotated[
+    OrderItemController, Depends(ControllerFactory.get_order_item_controller)
 ]

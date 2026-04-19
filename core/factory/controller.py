@@ -3,6 +3,8 @@ from app.controllers import (
     CartController,
     CartItemController,
     CategoryController,
+    OrderController,
+    OrderItemController,
     ProductController,
     UserController,
 )
@@ -10,6 +12,8 @@ from core.dependencies.repository import (
     CartItemRepositoryDep,
     CartRepositoryDep,
     CategoryRepositoryDep,
+    OrderItemRepositoryDep,
+    OrderRepositoryDep,
     ProductRepositoryDep,
     UserRepositoryDep,
 )
@@ -46,3 +50,13 @@ class ControllerFactory:
         repository: CartItemRepositoryDep,
     ) -> CartItemController:
         return CartItemController(repository)
+
+    @staticmethod
+    def get_order_controller(repository: OrderRepositoryDep) -> OrderController:
+        return OrderController(repository)
+
+    @staticmethod
+    def get_order_item_controller(
+        repository: OrderItemRepositoryDep,
+    ) -> OrderItemController:
+        return OrderItemController(repository)
