@@ -23,7 +23,7 @@ class DBOrder(DBBase, PrimaryKeyMixin, TimestampMixin):
 
     # Relationship
     items: Mapped[List["DBOrderItem"]] = relationship(
-        "DBOrderItem", back_populates="cart", cascade="all, delete-orphan"
+        "DBOrderItem", back_populates="order", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:
