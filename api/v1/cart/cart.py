@@ -1,8 +1,13 @@
 from uuid import UUID
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 
-router = APIRouter()
+from core.dependencies.auth import auth_required
+from core.dependencies.controller import CartControllerDep
+from core.dependencies.user import CurrentUserDep
+
+router = APIRouter(dependencies=[Depends(auth_required)])
 
 
 @router.get("/")
@@ -21,8 +26,8 @@ async def get_user_cart():
 
 
 @router.post("/")
-async def create():
-    pass
+async def create(user: CurrentUserDep, controller: CartControllerDep) -> JSONResponse:
+    return await controller.create(user)
 
 
 @router.put("/{uid}")
