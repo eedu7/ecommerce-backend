@@ -7,9 +7,7 @@ from core.dependencies.auth import auth_required
 from core.dependencies.controller import CartItemControllerDep
 from core.dependencies.user import CurrentUserDep
 
-router = APIRouter(
-    dependencies=[Depends(auth_required)]
-)
+router = APIRouter(dependencies=[Depends(auth_required)])
 
 
 @router.get("/{cart_uid}/items")
