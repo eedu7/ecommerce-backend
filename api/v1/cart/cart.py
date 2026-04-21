@@ -26,7 +26,7 @@ async def get_cart(uid: UUID, controller: CartControllerDep):
 
 @router.post("/")
 async def create(user: CurrentUserDep, controller: CartControllerDep):
-    return await controller.create(user)
+    return (await controller.create(user.uid),)
 
 
 @router.delete("/{uid}")

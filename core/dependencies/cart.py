@@ -1,0 +1,14 @@
+from fastapi import Depends
+from typing import Annotated
+from app.models import DBCart
+from core.dependencies.user import CurrentUserDep
+from core.dependencies.controller import CartControllerDep
+
+
+async def get_user_cart(
+    current_user: CurrentUserDep, controller: CartControllerDep
+) -> DBCart:
+    return await controller.get_user_cart(current_user.uid)
+
+
+UserCartDep = Annotated[DBCart, Depends(get_user_cart)]

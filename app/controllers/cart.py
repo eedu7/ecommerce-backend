@@ -2,10 +2,9 @@ from uuid import UUID
 
 from fastapi.responses import JSONResponse
 
-from app.models import DBCart, DBUser
+from app.models import DBCart
 from app.repositories import CartRepository
 from core.controller import BaseController
-from core.exceptions import NotFoundException
 
 
 class CartController(BaseController[DBCart]):
@@ -16,16 +15,16 @@ class CartController(BaseController[DBCart]):
         super().__init__(DBCart, repository)
         self.repository: CartRepository = repository
 
-    async def get_user_cart(self, uid: UUID) -> DBCart:
-        cart = await self.repository.get_by_user_uid(uid)
+    async def get_user_cart(self, user_uid: UUID) -> DBCart:
+        cart = await self.repository.get_by_user_uid(user_uid)
 
         if cart is None:
-            raise NotFoundException()
+            return await self.create(user_uid)
 
         return cart
 
-    async def create(self, user: DBUser) -> DBCart:
-        cart = await self.repository.create({"user_uid": user.uid})
+    async def create(self, user_uid: UUID) -> DBCart:
+        cart = await self.repository.create({"user_uid": user_uid})
         await self.commit()
 
         return cart
