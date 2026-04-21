@@ -19,7 +19,7 @@ async def get_user_cart(user: CurrentUserDep, controller: CartControllerDep):
     return await controller.get_user_cart(user.uid)
 
 
-@router.get("/{uid}")
+@router.get("/{uid}/items")
 async def get_cart(uid: UUID, controller: CartControllerDep):
     return await controller.get_by_uid(uid)
 

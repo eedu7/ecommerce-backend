@@ -39,6 +39,7 @@ class CartItemController(BaseController[DBCartItem]):
         item = await self.get_by_uid(uid)
 
         await self.repository.delete(item)
+        await self.commit()
 
         return {"message": f"Cart Item with uid '{uid}' deleted successfully."}
 
