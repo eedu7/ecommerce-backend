@@ -27,7 +27,6 @@ class ProductController(BaseController[DBProduct]):
 
     async def update(self, uid: UUID, data: ProductUpdateIn) -> DBProduct:
         product = await self.get_by_uid(uid)
-
         updated = await self.repository.update(
             product, data.model_dump(exclude_none=True)
         )
