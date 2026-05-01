@@ -1,8 +1,10 @@
-from fastapi import Depends
 from typing import Annotated
+
+from fastapi import Depends
+
 from app.models import DBCart
-from core.dependencies.user import CurrentUserDep
 from core.dependencies.controller import CartControllerDep
+from core.dependencies.user import CurrentUserDep
 
 
 async def get_user_cart(

@@ -16,8 +16,10 @@ async def get_current_user_orders(
 
 
 @router.post("/checkout")
-async def checkout(controller: OrderControllerDep, cart: UserCartDep):
-    return await controller.checkout(cart)
+async def checkout(
+    controller: OrderControllerDep, user: CurrentUserDep, cart: UserCartDep
+):
+    return await controller.checkout(user=user, cart=cart)
 
 
 # TODO: Added the Create Order API Endpoint
