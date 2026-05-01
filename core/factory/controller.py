@@ -52,8 +52,18 @@ class ControllerFactory:
         return CartItemController(repository)
 
     @staticmethod
-    def get_order_controller(repository: OrderRepositoryDep) -> OrderController:
-        return OrderController(repository)
+    def get_order_controller(
+        order_repository: OrderRepositoryDep,
+        order_item_repository: OrderItemRepositoryDep,
+        cart_repository: CartRepositoryDep,
+        cart_item_repository: CartItemRepositoryDep,
+    ) -> OrderController:
+        return OrderController(
+            order_repository=order_repository,
+            order_item_repository=order_item_repository,
+            cart_item_repository=cart_item_repository,
+            cart_repository=cart_repository,
+        )
 
     @staticmethod
     def get_order_item_controller(

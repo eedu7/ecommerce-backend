@@ -1,9 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from core.dependencies.auth import auth_required
+from core.dependencies.cart import UserCartDep
 from core.dependencies.controller import OrderControllerDep
 from core.dependencies.user import CurrentUserDep
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(auth_required)])
 
 
 @router.get("/")
@@ -11,6 +13,11 @@ async def get_current_user_orders(
     current_user: CurrentUserDep, controller: OrderControllerDep
 ):
     return await controller.get_user_orders(current_user.uid)
+
+
+@router.post("/checkout")
+async def checkout(controller: OrderControllerDep, cart: UserCartDep):
+    return await controller.checkout(cart)
 
 
 # TODO: Added the Create Order API Endpoint
