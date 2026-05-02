@@ -107,8 +107,9 @@ class Config(BaseSettings):
     FRONTEND_URL: str = "http://localhost:8000"
 
     # Stripe
-    STRIPE_PUBLISHABLE_KEY: str = "pk_test"
-    STRIPE_SECRET_KEY: str = "sk_test"
+    STRIPE_PUBLISHABLE_KEY: str = "pk_test..."
+    STRIPE_SECRET_KEY: str = "sk_test..."
+    STRIPE_WEBHOOK_SECRET: str = "whsec..."
 
     @computed_field
     @property

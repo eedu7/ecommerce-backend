@@ -17,6 +17,7 @@ dependencies = [
     "redis>=7.4.0",
     "resend>=2.27.0",
     "sqlalchemy>=2.0.49",
+    "stripe>=15.1.0",
 ]
 
 [dependency-groups]
