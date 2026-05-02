@@ -106,6 +106,10 @@ class Config(BaseSettings):
     RESEND_FROM_EMAIL: str = "onboarding@resend.dev"
     FRONTEND_URL: str = "http://localhost:8000"
 
+    # Stripe
+    STRIPE_PUBLISHABLE_KEY: str = "pk_test"
+    STRIPE_SECRET_KEY: str = "sk_test"
+
     @computed_field
     @property
     def DATABASE_URL(self) -> PostgresDsn:

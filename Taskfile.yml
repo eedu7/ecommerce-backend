@@ -56,3 +56,14 @@ tasks:
     desc: Stop the Docker containers without removing volumes
     cmds:
       - docker-compose stop
+
+  # Stripe
+  stripe:login:
+    desc: Login to stripe
+    cmds:
+      - docker-compose run stripe login
+  
+  stripe:listen:
+    desc: Listen to webhook
+    cmds:
+      - docker-compose run stripe listen --forward-to host.docker.internal:8000/api/v1/stripe/webhook

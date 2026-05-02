@@ -5,6 +5,7 @@ from .cart import cart_item_router, cart_router
 from .category import category_router
 from .order import order_item_router, order_router
 from .product import product_router
+from .stripe import stripe_router
 
 router = APIRouter()
 
@@ -15,3 +16,4 @@ router.include_router(cart_router, prefix="/carts", tags=["Cart"])
 router.include_router(cart_item_router, prefix="/carts", tags=["Cart Item"])
 router.include_router(order_router, prefix="/orders", tags=["Order"])
 router.include_router(order_item_router, prefix="/orders", tags=["Order Item"])
+router.include_router(stripe_router, prefix="/stripe", tags=["Stripe"])
