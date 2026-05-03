@@ -15,7 +15,9 @@ async def health_check():
 
 
 @router.post("/webhook")
-async def stripe_webhook(request: Request):
+async def stripe_webhook(
+    request: Request,
+):
     payload = await request.body()
     signature = request.headers.get("stripe-signature")
 
