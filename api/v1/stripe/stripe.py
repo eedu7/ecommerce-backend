@@ -31,12 +31,7 @@ async def stripe_webhook(request: Request):
     except Exception as exc:
         raise BadRequestException(str(exc))
 
-
-    result = {
-        "created": event["created"],
-        "id": event["id"],
-        "type": event["type"]
-    }
+    result = {"created": event["created"], "id": event["id"], "type": event["type"]}
     print("#" * 8)
     print("#" * 8)
     print(event)
@@ -45,4 +40,3 @@ async def stripe_webhook(request: Request):
     print(result)
     print("#" * 8)
     print("#" * 8)
-    
