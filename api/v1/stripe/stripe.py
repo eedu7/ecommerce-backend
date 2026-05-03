@@ -1,5 +1,8 @@
 import stripe
 from fastapi import APIRouter, Request
+from fastapi.responses import RedirectResponse
+from stripe import StripeClient
+from stripe.params import PaymentLinkCreateParams
 
 from core.config import config
 from core.exceptions import BadRequestException
@@ -8,11 +11,49 @@ stripe.api_key = config.STRIPE_SECRET_KEY
 
 router = APIRouter()
 
+client = StripeClient(config.STRIPE_SECRET_KEY)
 
 @router.get("/health")
 async def health_check():
     return {"stripe": "Health Check"}
 
+@router.get("/checkout")
+async def checkout():
+    data: PaymentLinkCreateParams = {
+    "line_items": [
+        {
+            "price_data": {
+                "currency": "usd",
+                "product_data": {"name": "T-shirt"},
+                "unit_amount": 2000,
+            },
+            "quantity": 1,
+        }
+    ],
+    }
+    payment_link = client.payment_links.create(data,
+    
+    )
+
+    return RedirectResponse(payment_link.url)
+
+    session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        line_items=[
+            {
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {"name": "T-shirt"},
+                    "unit_amount": 2000,
+                },
+                "quantity": 1,
+            }
+        ],
+        mode="payment",
+        success_url="https://example.com/success",
+        cancel_url="https://example.com/cancel",
+    )
+    return {"session_id": session.id}
 
 @router.post("/webhook")
 async def stripe_webhook(
