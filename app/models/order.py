@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from decimal import Decimal
 from enum import StrEnum
 from typing import TYPE_CHECKING, List
 from uuid import UUID
 
-from sqlalchemy import Enum as PG_ENUM, String
-from sqlalchemy import ForeignKey
+from sqlalchemy import Enum as PG_ENUM
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models import DBBase
@@ -46,6 +47,8 @@ class DBOrder(DBBase, PrimaryKeyMixin, TimestampMixin):
         default=PaymentStatus.UNPAID,
         nullable=False,
     )
+
+    total_amount: Mapped[Decimal | None] = mapped_column(nullable=True)
 
     stripe_checkout_session_id: Mapped[str | None] = mapped_column(
         String(256), nullable=True

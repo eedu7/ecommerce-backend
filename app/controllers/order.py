@@ -1,5 +1,9 @@
 from uuid import UUID
 
+import stripe
+from fastapi.responses import RedirectResponse
+from stripe.params import PaymentLinkCreateParams
+
 from app.models import DBCart, DBOrder, DBUser
 from app.repositories import (
     CartItemRepository,
@@ -7,7 +11,12 @@ from app.repositories import (
     OrderItemRepository,
     OrderRepository,
 )
+from core.config import config
 from core.controller import BaseController
+
+stripe.api_key = config.STRIPE_SECRET_KEY
+
+stripe_client = stripe.StripeClient(config.STRIPE_SECRET_KEY)
 
 
 class OrderController(BaseController[DBOrder]):
@@ -29,9 +38,17 @@ class OrderController(BaseController[DBOrder]):
 
     async def checkout(self, user: DBUser, cart: DBCart):
 
+        print("$" * 12)
+        print("Cart", cart)
+        print("$" * 12)
+
         order = await self.order_repository.create({"user_uid": user.uid})
         await self.flush()
         await self.refresh(order)
+
+        data: PaymentLinkCreateParams = {
+            "line_items": [],
+        }
 
         for item in cart.items:
             await self.order_item_repository.create(
@@ -41,8 +58,28 @@ class OrderController(BaseController[DBOrder]):
                     "quantity": item.quantity,
                 }
             )
+            data["line_items"].append(
+                {
+                    "price_data": {
+                        "currency": "usd",
+                        "product_data": {"name": item.product.name},
+                        "unit_amount": int(item.product.price * 100),
+                    },
+                    "quantity": item.quantity,
+                }
+            )
 
         await self.cart_repository.delete(cart)
 
+        payment_link = stripe_client.payment_links.create(data)
+
+        order.stripe_checkout_session_id = payment_link.id
+
         await self.commit()
-        return {"message": "Checkout success"}
+
+        return {
+            "order_uid": order.uid,
+            "payment_link": payment_link.url,
+        }
+
+        return RedirectResponse(payment_link.url)
