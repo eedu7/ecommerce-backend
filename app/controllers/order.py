@@ -76,11 +76,20 @@ class OrderController(BaseController[DBOrder]):
 
         order.stripe_checkout_session_id = payment_link.id
 
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            mode="payment",
+            line_items=data["line_items"],
+            success_url="https://www.youtube.com",
+            cancel_url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        )
+
         await self.commit()
 
         return {
             "order_uid": order.uid,
             "payment_link": payment_link.url,
+            "checkout_url": session.url
         }
 
         return RedirectResponse(payment_link.url)
