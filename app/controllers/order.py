@@ -13,6 +13,7 @@ from app.repositories import (
 )
 from core.config import config
 from core.controller import BaseController
+from core.exceptions import NotFoundException
 
 stripe.api_key = config.STRIPE_SECRET_KEY
 
@@ -83,3 +84,13 @@ class OrderController(BaseController[DBOrder]):
         }
 
         return RedirectResponse(payment_link.url)
+
+    async def get_by_stripe_checkout_session_id(self, session_id: str) -> DBOrder:
+        order = await self.order_repository.get_one_by_filters(
+            {"stripe_checkout_session_id": session_id}
+        )
+
+        if not order:
+            raise NotFoundException("Order not found")
+
+        return order

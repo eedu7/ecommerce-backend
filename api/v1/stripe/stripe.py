@@ -1,11 +1,10 @@
-from pprint import pprint
-
 import stripe
 from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
 from stripe import StripeClient
 from stripe.params import PaymentLinkCreateParams
 
+from app.models import DBOrder, OrderStatus, PaymentStatus
 from core.config import config
 from core.dependencies.controller import OrderControllerDep
 from core.exceptions import BadRequestException
@@ -78,37 +77,25 @@ async def stripe_webhook(request: Request, controller: OrderControllerDep):
     except Exception as exc:
         raise BadRequestException(str(exc))
 
-    result = {"created": event["created"], "id": event["id"], "type": event["type"]}
+    stripe_checkout_session_id = event["data"]["object"]["id"]
+    event_type = event["type"]
 
-    exists = await controller.repository.get_one_by_filters(
-        {"stripe_checkout_session_id": event["data"]["object"]["id"]}
+    order: DBOrder = await controller.get_by_stripe_checkout_session_id(
+        stripe_checkout_session_id
     )
 
-    print("%" * 8)
-    print("Payment ID", event["data"]["object"]["id"])
-    print("%" * 8)
-    print("%" * 8)
-    pprint(result)
-    print("%" * 8)
-    print("%" * 8)
-    print("%" * 8)
-    pprint(exists)
-    print("%" * 8)
-    print("%" * 8)
-    print("%" * 8)
-    print("%" * 8)
-    pprint(event)
-    print("%" * 8)
-    print("%" * 8)
-    print("%" * 8)
-    print("%" * 8)
-    print("%" * 8)
-
-    # print("#" * 8)
-    # print("#" * 8)
-    # print(event)
-    # print("#" * 8)
-    # print("#" * 8)
-    # print(result)
-    # print("#" * 8)
-    # print("#" * 8)
+    match event_type:
+        case "checkout.session.completed":
+            order.payment_status = PaymentStatus.PAID
+            order.status = OrderStatus.PROCESSING
+        case "payment_intent.payment_failed":
+            order.payment_status = PaymentStatus.FAILED
+            order.status = OrderStatus.FAILED
+        case "charge.refunded":
+            order.payment_status = PaymentStatus.REFUNDED
+            order.status = OrderStatus.REFUNDED
+        case _:
+            order.payment_status = PaymentStatus.REFUNDED
+            order.status = OrderStatus.DELIVERED
+    
+    await controller.commit()
